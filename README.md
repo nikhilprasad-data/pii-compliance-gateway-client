@@ -50,10 +50,6 @@ Display sanitized result
 Display detected PII + metrics
 ```
 
-**[▶ Watch the full demo on LinkedIn](#)**
-
-The LinkedIn demo link is a temporary placeholder and will be replaced with the actual project post after publication.
-
 ---
 
 ## Architecture
