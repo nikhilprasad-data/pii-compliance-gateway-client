@@ -1,30 +1,21 @@
 # PII Compliance Gateway — Client
 
-A Next.js dashboard for interacting with the PII Compliance Gateway API.
+A Next.js dashboard for the PII Compliance Gateway API. Submit text, watch it get scanned, see what was flagged and redacted, and compare the cached path with the cold path.
 
-The frontend provides a simple interface for submitting text for PII scanning, viewing sanitized output, inspecting detected entities, and observing scan performance and Redis caching behavior.
-
-The frontend is maintained as a separate repository from the FastAPI backend so the API can be used independently by other clients or services.
+Lives in its own repo, separate from the FastAPI backend, so the API stays usable by anything else that wants to talk to it — not just this dashboard.
 
 ---
 
-## What this application does
+## Live Demo
 
-The dashboard acts as the client interface for the PII Compliance Gateway.
+**Frontend:**
+https://pii-compliance-gateway-client.vercel.app/
 
-A user can:
+**Backend API:**
+https://pii-compliance-gateway-api.onrender.com/
 
-- Submit text containing sensitive information
-- Send the request to the FastAPI scanning API
-- View the sanitized result
-- View detected PII entities
-- View backend processing time
-- Observe cache-related performance information
-- Handle loading and API error states
-
-The frontend does not perform the core PII detection itself. Detection and sanitization are handled by the backend gateway.
-
-The frontend is responsible for presenting the workflow and making the backend functionality easier to use.
+**API Documentation:**
+https://pii-compliance-gateway-api.onrender.com/docs
 
 ---
 
@@ -32,9 +23,9 @@ The frontend is responsible for presenting the workflow and making the backend f
 
 [▶ Watch the full demo on LinkedIn](YOUR_LINKEDIN_POST_URL)
 
-The main workflow is:
+The workflow, start to finish:
 
-```
+```text
 Enter text
     ↓
 Submit scan request
@@ -52,9 +43,25 @@ Display detected PII + metrics
 
 ---
 
+## What this application does
+
+This is the client side of the gateway — it doesn't detect or sanitize anything itself, it just gives you a way to actually see the backend work instead of hitting the API with curl.
+
+From here you can:
+
+- Submit text with sensitive info in it
+- Fire the request off to the FastAPI scanning endpoint
+- See the sanitized result and what entities got flagged
+- See backend processing time and whether it hit cache
+- Handle loading and API error states clearly
+
+Detection and sanitization live entirely on the backend. This app's job is presentation — make the workflow easy to follow and easy to demo.
+
+---
+
 ## Architecture
 
-The frontend is intentionally separated from the backend.
+Frontend and backend are deliberately split.
 
 ```
 ┌─────────────────────────────┐
@@ -76,15 +83,15 @@ The frontend is intentionally separated from the backend.
     Cache   PII Engine Audit Data
 ```
 
-The frontend communicates with the backend through the scan API.
+The frontend only ever talks to the backend through the scan API. Everything else — detection, deterministic sanitization, Redis caching, IP rate limiting, Postgres persistence, timing — happens on the other side of that HTTP call.
 
-This separation keeps the client independent from the backend implementation and allows the same API to be consumed by other applications.
+Keeping that split means the backend API stays usable on its own, and this frontend can change however it wants without touching backend code.
 
 ---
 
 ## Frontend structure
 
-The application follows a feature-oriented structure inside `src/`:
+Feature-oriented layout inside `src/`:
 
 ```
 src/
@@ -112,7 +119,7 @@ src/
     └── Shared TypeScript types
 ```
 
-The goal is to keep presentation components, reusable utilities, application logic, and shared types separated instead of putting everything inside a single page component.
+UI, application logic, reusable utilities, and shared types stay in their own lanes instead of getting dumped into one giant page component.
 
 ---
 
@@ -120,33 +127,25 @@ The goal is to keep presentation components, reusable utilities, application log
 
 ### Scanner
 
-The scanner interface allows users to submit text to the PII Gateway API and view the resulting sanitized output.
-
-It also presents the detected PII information returned by the backend.
+The main event — submit text, get the sanitized output back, see exactly what the gateway flagged as PII.
 
 ### Dashboard
 
-The dashboard brings the main scanning workflow and system information into one place.
-
-It is designed to make the gateway easy to demonstrate and inspect without requiring users to interact directly with the API.
+Pulls the scan workflow, results, and system info into one place so the gateway's easy to demo without anyone touching the API directly.
 
 ### Analytics
 
-The analytics section presents scan-related metrics such as processing time and cache performance returned by the backend.
-
-The goal is to display actual backend results rather than hardcoded performance values.
+Shows real numbers coming out of the backend — processing time, cache hit/miss, cache performance, scan counts, entity counts. Nothing here is hardcoded; if the backend didn't return it, it doesn't show up.
 
 ### Reusable UI
 
-Common interface elements are kept in reusable UI components so the dashboard does not depend on duplicated markup for every screen.
+Shared components so the dashboard stays visually consistent instead of every screen reinventing the same card or button.
 
 ---
 
 ## Backend integration
 
-The frontend communicates with the separate FastAPI backend through the scan API.
-
-The main endpoint used by the dashboard is:
+The frontend talks to the FastAPI backend through one endpoint:
 
 `POST /api/v1/scan`
 
@@ -162,27 +161,77 @@ The main endpoint used by the dashboard is:
 
 ```json
 {
-  "original_text": "My email is guest@email.com",
   "sanitized_text": "My email is [REDACTED]",
   "detected_pii": [
     {
-      "entity_type": "EMAIL",
+      "entity_type": "EMAIL_ADDRESS",
       "start_index": 17,
       "end_index": 34
     }
   ],
-  "processing_time_ms": 12
+  "processing_time_ms": 12.34
 }
 ```
 
-The frontend uses the response from the backend to render the sanitized text, detected entities, and processing information.
+The frontend renders the sanitized text, the detected entity metadata, and the processing time straight from this response. The original raw input never comes back — the API doesn't return it.
+
+---
+
+## Privacy-conscious design
+
+This wasn't just a backend concern — it shaped the frontend too. The dashboard shows the sanitized result the gateway hands back; it's not pulling from any stored raw input, because there isn't any to pull from.
+
+On the backend side, the audit record only ever holds:
+
+- Sanitized text
+- Detected PII metadata
+- Processing time
+- Timestamp
+
+Same story for the Redis cache — it stores the sanitized response and its metadata, not the original text, and the cache key itself is just a SHA-256 hash of the input.
+
+Worth saying plainly: this is a privacy-conscious engineering project, not a claim of formal legal or regulatory compliance.
+
+---
+
+## Production deployment
+
+Frontend and backend are deployed as separate services.
+
+```
+                    Internet
+                       │
+          ┌────────────┴────────────┐
+          │                         │
+          ▼                         ▼
+       Vercel                    Render
+   Next.js Frontend          FastAPI Backend
+                                  │
+                    ┌─────────────┼─────────────┐
+                    │             │             │
+                    ▼             ▼             ▼
+                 Upstash        Neon          LangGraph
+                  Redis       PostgreSQL       Workflow
+```
+
+**Production services**
+
+| Component | Platform | Responsibility |
+| --- | --- | --- |
+| Next.js | Vercel | Frontend dashboard |
+| FastAPI | Render | Backend API |
+| PostgreSQL | Neon | Persistent audit data |
+| Redis | Upstash | Caching and rate limiting |
+| LangGraph | Backend | PII processing workflow |
+
+Production env vars live in the deployment platforms — none of that is in the repo.
 
 ---
 
 ## Technology stack
 
 **Frontend:** Next.js, React, TypeScript, Tailwind CSS
-**Backend integration:** FastAPI, REST API, JSON
+**Backend integration:** FastAPI, REST API, JSON, HTTP
 **Development:** npm, ESLint, Git, GitHub
 
 ---
@@ -192,7 +241,8 @@ The frontend uses the response from the backend to render the sanitized text, de
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/nikhilprasad-data/pii-compliance-gateway-client
+git clone https://github.com/nikhilprasad-data/pii-compliance-gateway-client.git
+
 cd pii-compliance-gateway-client
 ```
 
@@ -204,21 +254,21 @@ npm install
 
 **3. Configure the backend API**
 
-Create the required local environment file:
+Create a local environment file:
 
 ```
 .env.local
 ```
 
-Configure the frontend with the URL of the running FastAPI backend.
-
-For local development, the backend runs on:
+Add the URL of the FastAPI backend:
 
 ```
-http://127.0.0.1:8000
+NEXT_PUBLIC_API_URL=http://127.0.0.1:8000
 ```
 
-Do not commit `.env.local` or any file containing private credentials or secrets.
+The backend has to actually be running for the dashboard to do anything useful — this is just the client half.
+
+Don't commit `.env.local` or anything else with real credentials in it.
 
 **4. Start the development server**
 
@@ -226,7 +276,7 @@ Do not commit `.env.local` or any file containing private credentials or secrets
 npm run dev
 ```
 
-Open the application at:
+Open:
 
 ```
 http://localhost:3000
@@ -236,19 +286,19 @@ http://localhost:3000
 
 ## Development commands
 
-Start the development server:
+Start the dev server:
 
 ```bash
 npm run dev
 ```
 
-Run linting:
+Lint:
 
 ```bash
 npm run lint
 ```
 
-Create a production build:
+Production build:
 
 ```bash
 npm run build
@@ -264,9 +314,7 @@ npm run start
 
 ## Running the complete project locally
 
-The frontend is only the client portion of the PII Compliance Gateway.
-
-For the complete workflow, the backend API, PostgreSQL, and Redis services also need to be running.
+This repo is only the client half. For the full workflow you need the backend API and its supporting services running too.
 
 ```
 Next.js
@@ -281,56 +329,64 @@ localhost:8000
       └── PostgreSQL
 ```
 
-The backend repository contains the API, AI workflow, caching, rate limiting, database persistence, and infrastructure configuration.
+The backend repo has the API, the PII workflow, caching, rate limiting, database persistence, migrations, and infra config.
+
+---
+
+## Performance
+
+The dashboard surfaces whatever processing info the backend hands back for each scan.
+
+The backend repo also has a standalone benchmark comparing cold requests against Redis-cached ones — average, median, P95, min, max latency for both, plus the overall improvement between them.
+
+It's there to show what caching actually does to latency, not to make any claim about production-scale throughput.
 
 ---
 
 ## AI-assisted development
 
-Antigravity was used as an AI coding assistant during frontend development to accelerate implementation.
-
-I used it primarily to speed up UI implementation and frontend development while working against the existing PII Compliance Gateway API.
-
-The generated code was reviewed, integrated with the backend, and tested as part of the development process.
+Antigravity was used as an AI coding assistant to speed up frontend implementation and UI iteration. Generated code got reviewed, wired up against the real backend API, and tested like any other code that ends up in this repo.
 
 ---
 
 ## Project relationship
 
-This repository is the frontend client for the PII Compliance Gateway.
+This is the frontend half of the gateway:
 
 ```
 pii-compliance-gateway-client
-        │
-        │ Next.js frontend
-        ▼
+            │
+            │ Next.js frontend
+            ▼
 pii-compliance-gateway-api
-        │
-        │ FastAPI backend
-        ▼
+            │
+            │ FastAPI backend
+            ▼
 PII detection + sanitization
-        │
-        ├── Redis
-        └── PostgreSQL
+            │
+            ├── Redis
+            └── PostgreSQL
 ```
 
-Keeping the repositories separate allows the backend API to remain independently usable while the frontend can evolve as its own application.
+Keeping the repos separate means the API stays usable on its own while the frontend evolves independently.
 
 ---
 
 ## Current status
 
-The frontend dashboard is implemented and connected to the PII Compliance Gateway API.
+The dashboard's built, deployed, and talking to the production API.
 
-Current work focuses on completing the remaining project-readiness steps, including deployment, final documentation, and production-oriented improvements.
+Right now this is in the final documentation and cleanup stage — writing up the engineering decisions, double-checking the existing implementation, and figuring out what's actually worth building next instead of adding features just to pad the project out.
 
 ---
 
 ## Related project
 
-**[PII Compliance Gateway API](https://github.com/nikhilprasad-data/pii-compliance-gateway-api)**
+**PII Compliance Gateway API**
 
-The backend repository contains the FastAPI gateway, LangGraph PII workflow, Redis caching and rate limiting, PostgreSQL persistence, Docker configuration, and performance benchmarking.
+https://github.com/nikhilprasad-data/pii-compliance-gateway-api
+
+The backend repo has the FastAPI service, the LangGraph PII workflow, structured detection, deterministic sanitization, Redis caching, IP rate limiting, Postgres persistence, Alembic migrations, Docker config, production deployment setup, and the performance benchmark.
 
 ---
 
