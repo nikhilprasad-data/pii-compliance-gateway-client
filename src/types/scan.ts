@@ -5,7 +5,6 @@
 
 export interface DetectedEntity {
   entity_type: string;
-  entity_value: string;
   start_index: number;
   end_index: number;
 }
@@ -15,7 +14,6 @@ export interface ScanRequest {
 }
 
 export interface ScanResponse {
-  original_text: string;
   sanitized_text: string;
   detected_pii: DetectedEntity[];
   processing_time_ms: number;
