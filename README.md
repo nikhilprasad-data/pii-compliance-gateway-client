@@ -21,7 +21,7 @@ https://pii-compliance-gateway-api.onrender.com/docs
 
 ## Demo
 
-[▶ Watch the full demo on LinkedIn](YOUR_LINKEDIN_POST_URL)
+**[▶ Watch the full demo on LinkedIn](https://lnkd.in/p/gk8w4Bah)**
 
 The workflow, start to finish:
 
