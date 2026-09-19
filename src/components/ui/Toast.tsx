@@ -27,24 +27,24 @@ const icons = {
 
 const toastStyles = {
   success: {
-    wrapper: "border-emerald-200 bg-white",
-    icon: "text-emerald-500",
-    accent: "bg-emerald-500",
+    wrapper: "border-[var(--success-border)] bg-[var(--surface)]",
+    icon: "text-[var(--success)]",
+    accent: "bg-[var(--success)]",
   },
   error: {
-    wrapper: "border-red-200 bg-white",
-    icon: "text-red-500",
-    accent: "bg-red-500",
+    wrapper: "border-[var(--danger-border)] bg-[var(--surface)]",
+    icon: "text-[var(--danger)]",
+    accent: "bg-[var(--danger)]",
   },
   warning: {
-    wrapper: "border-amber-200 bg-white",
-    icon: "text-amber-500",
-    accent: "bg-amber-500",
+    wrapper: "border-[var(--warning-border)] bg-[var(--surface)]",
+    icon: "text-[var(--warning)]",
+    accent: "bg-[var(--warning)]",
   },
   info: {
-    wrapper: "border-blue-200 bg-white",
-    icon: "text-blue-500",
-    accent: "bg-blue-500",
+    wrapper: "border-[var(--info-border)] bg-[var(--surface)]",
+    icon: "text-[var(--info)]",
+    accent: "bg-[var(--info)]",
   },
 };
 

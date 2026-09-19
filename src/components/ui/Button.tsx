@@ -23,19 +23,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const base =
-      "inline-flex items-center justify-center gap-1.5 font-medium rounded-[var(--radius-xs)] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed select-none active:translate-y-px";
+      "inline-flex items-center justify-center gap-1.5 font-medium rounded-[var(--radius-xs)] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] disabled:opacity-50 disabled:cursor-not-allowed select-none active:translate-y-px";
 
     const variants = {
       primary:
-        "bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] border border-transparent shadow-[var(--shadow-sm)]",
+        "btn-primary-glow text-white border border-transparent",
       secondary:
-        "bg-white text-[var(--text-primary)] hover:bg-[var(--surface-strong)] border border-[var(--border)] shadow-[var(--shadow-sm)]",
+        "bg-[var(--surface)] text-[var(--text-primary)] hover:bg-[var(--surface-strong)] border border-[var(--border)] shadow-[var(--shadow-sm)]",
       ghost:
         "bg-transparent text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-strong)]",
       danger:
         "bg-[var(--danger)] text-white hover:bg-[var(--danger-text)] border border-transparent shadow-[var(--shadow-sm)]",
       outline:
-        "border border-[var(--border)] text-[var(--text-secondary)] bg-white hover:bg-[var(--surface-strong)] hover:text-[var(--text-primary)]",
+        "border border-[var(--border)] text-[var(--text-secondary)] bg-[var(--surface)] hover:bg-[var(--surface-strong)] hover:text-[var(--text-primary)]",
     };
 
     const sizes = {

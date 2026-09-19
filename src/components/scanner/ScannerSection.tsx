@@ -59,11 +59,11 @@ export function ScannerSection({
       <div className="mb-4">
         <h2
           id="scanner-heading"
-          className="text-[1.25rem] font-bold text-[var(--text-primary)] tracking-tight"
+          className="text-[2rem] md:text-[2.5rem] font-extrabold text-[var(--text-primary)] tracking-tight glow-heading"
         >
           PII Scanner
         </h2>
-        <p className="mt-1 text-[0.875rem] text-[var(--text-muted)]">
+        <p className="mt-2 text-[0.875rem] text-[var(--text-muted)]">
           Detect and redact sensitive information before it reaches downstream systems.
           Use{" "}
           <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-[var(--surface-strong)] border border-[var(--border)] rounded text-[var(--text-secondary)]">

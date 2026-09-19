@@ -45,13 +45,13 @@ export function Dashboard() {
   return (
     <div className="min-h-screen">
       {/* ── Compact Header ────────────────────────────── */}
-      <header className="border-b border-[var(--border)] bg-white sticky top-0 z-30">
+      <header className="border-b border-[var(--border)] bg-[var(--surface)] sticky top-0 z-30">
         <Container>
           <div className="flex items-center h-12 gap-4">
             {/* Brand — left-aligned: icon + stacked product name/subtitle */}
             <div className="flex items-center gap-2.5 flex-1 min-w-0">
               <div
-                className="w-6 h-6 rounded-[var(--radius-xs)] bg-[var(--primary)] flex items-center justify-center flex-shrink-0"
+                className="w-6 h-6 rounded-[var(--radius-xs)] bg-black border border-white/15 flex items-center justify-center flex-shrink-0"
                 aria-hidden="true"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-white" />

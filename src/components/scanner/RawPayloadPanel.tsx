@@ -114,7 +114,7 @@ export function RawPayloadPanel({
               id="payload-presets-popup"
               role="listbox"
               aria-label="Select a payload preset"
-              className="absolute top-full right-0 mt-1 z-20 w-48 bg-white border border-[var(--border)] rounded-[var(--radius-sm)] shadow-[var(--shadow-lg)] p-1 flex flex-col gap-px"
+              className="absolute top-full right-0 mt-1 z-20 w-48 bg-[var(--surface-elevated)] border border-[var(--border)] rounded-[var(--radius-sm)] shadow-[var(--shadow-lg)] p-1 flex flex-col gap-px"
             >
               {PAYLOAD_PRESETS.map((preset) => (
                 <button

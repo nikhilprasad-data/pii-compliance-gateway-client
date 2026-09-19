@@ -41,31 +41,31 @@ export function LatestScan({ latest }: LatestScanProps) {
         {/* Show status pill only when actively scanning or completed/failed */}
         {latest.status === "scanning" && (
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex-shrink-0 bg-blue-50 text-blue-600 border-blue-200"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex-shrink-0 bg-[var(--info-subtle)] text-[var(--info-text)] border-[var(--info-border)]"
             aria-live="polite"
             aria-atomic="true"
           >
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-blue-500 animate-pulse" aria-hidden="true" />
+            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[var(--info)] animate-pulse" aria-hidden="true" />
             Scanning
           </span>
         )}
         {latest.status === "completed" && (
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex-shrink-0 bg-emerald-50 text-emerald-700 border-emerald-200"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex-shrink-0 bg-[var(--success-subtle)] text-[var(--success-text)] border-[var(--success-border)]"
             aria-live="polite"
             aria-atomic="true"
           >
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-500" aria-hidden="true" />
+            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[var(--success)]" aria-hidden="true" />
             Completed
           </span>
         )}
         {latest.status === "failed" && (
           <span
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex-shrink-0 bg-red-50 text-red-700 border-red-200"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border flex-shrink-0 bg-[var(--danger-subtle)] text-[var(--danger-text)] border-[var(--danger-border)]"
             aria-live="polite"
             aria-atomic="true"
           >
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-red-500" aria-hidden="true" />
+            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-[var(--danger)]" aria-hidden="true" />
             Failed
           </span>
         )}
@@ -99,11 +99,10 @@ export function LatestScan({ latest }: LatestScanProps) {
               {/* 1. PII Detected */}
               <ScanMetricCard label="PII Detected">
                 <span
-                  className={`text-[1.375rem] font-extrabold leading-tight tracking-tight tabular-nums ${
-                    latest.piiDetected !== null && latest.piiDetected > 0
-                      ? "text-[var(--danger-text)]"
-                      : "text-[var(--success-text)]"
-                  }`}
+                  className={`text-[1.375rem] font-extrabold leading-tight tracking-tight tabular-nums ${latest.piiDetected !== null && latest.piiDetected > 0
+                    ? "text-[var(--danger-text)] glow-danger"
+                    : "text-[var(--success-text)] glow-success"
+                    }`}
                 >
                   {latest.piiDetected === null
                     ? "—"
@@ -125,11 +124,11 @@ export function LatestScan({ latest }: LatestScanProps) {
                 {latest.path === null ? (
                   <span className="text-[1.375rem] font-extrabold leading-tight text-[var(--text-muted)]">—</span>
                 ) : latest.path === "CACHE HIT" ? (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-1 rounded-[var(--radius-xs)] text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-1 rounded-[var(--radius-xs)] text-[11px] font-bold bg-[var(--success-subtle)] text-[var(--success-text)] border border-[var(--success-border)]">
                     ⚡ Cache Hit (Redis)
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-1 rounded-[var(--radius-xs)] text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 mt-1 rounded-[var(--radius-xs)] text-[11px] font-bold bg-[var(--warning-subtle)] text-[var(--warning-text)] border border-[var(--warning-border)]">
                     🧠 Cold Request
                   </span>
                 )}

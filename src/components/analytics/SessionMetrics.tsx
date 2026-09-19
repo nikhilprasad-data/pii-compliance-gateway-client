@@ -63,6 +63,7 @@ export function SessionMetrics({ analytics }: SessionMetricsProps) {
         <MetricCard
           label="PII Detected"
           value={performance.piiEntitiesDetected.toLocaleString()}
+          valueColor="text-[var(--danger-text)] glow-danger"
           hint="Entities found across all scans"
           accent="red"
         />
@@ -79,7 +80,7 @@ export function SessionMetrics({ analytics }: SessionMetricsProps) {
         <MetricCard
           label="Cache Speedup"
           value={formatSpeedup(cache.speedup)}
-          valueColor="text-emerald-600"
+          valueColor="text-[var(--success-text)] glow-success"
           badge="Redis In-Memory Cache"
           hint={cacheHint}
           detail={cacheDetail}

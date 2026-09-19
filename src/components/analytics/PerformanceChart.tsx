@@ -1,9 +1,10 @@
 "use client";
 
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -37,8 +38,8 @@ interface TooltipPayloadItem {
   value: number;
 }
 
-const COLD_COLOR = "#d97706";   // amber-600 — cold requests
-const CACHE_COLOR = "#2563eb";  // blue-600 — cache hits
+const COLD_COLOR = "var(--warning)";  // cold requests
+const CACHE_COLOR = "var(--info)";    // cache hits
 
 /** Minimum value shown on log Y-axis — prevents log(0) = -Infinity → NaN cy */
 const LOG_MIN_MS = 0.1;
@@ -49,14 +50,16 @@ function CustomDot(props: DotProps & { payload?: ChartDataPoint }) {
   // Guard against non-finite coordinates — these would produce an invalid SVG circle
   if (!Number.isFinite(cx) || !Number.isFinite(cy) || !payload) return null;
   const isCacheHit = payload.path === "CACHE HIT";
+  const color = isCacheHit ? CACHE_COLOR : COLD_COLOR;
   return (
     <circle
       cx={cx}
       cy={cy}
       r={4}
-      fill={isCacheHit ? CACHE_COLOR : COLD_COLOR}
-      stroke="white"
+      fill={color}
+      stroke="var(--background)"
       strokeWidth={1.5}
+      style={{ filter: `drop-shadow(0 0 5px ${color})` }}
     />
   );
 }
@@ -67,14 +70,16 @@ function CustomActiveDot(props: DotProps & { payload?: ChartDataPoint }) {
   // Guard against non-finite coordinates
   if (!Number.isFinite(cx) || !Number.isFinite(cy) || !payload) return null;
   const isCacheHit = payload.path === "CACHE HIT";
+  const color = isCacheHit ? CACHE_COLOR : COLD_COLOR;
   return (
     <circle
       cx={cx}
       cy={cy}
       r={6}
-      fill={isCacheHit ? CACHE_COLOR : COLD_COLOR}
-      stroke="white"
+      fill={color}
+      stroke="var(--background)"
       strokeWidth={2}
+      style={{ filter: `drop-shadow(0 0 7px ${color})` }}
     />
   );
 }
@@ -101,7 +106,7 @@ function LatencyTooltip({
   const point = payload[0].payload;
   const isCacheHit = point.path === "CACHE HIT";
   return (
-    <div className="rounded-[var(--radius-xs)] border border-[var(--border)] bg-white px-3 py-2.5 shadow-[var(--shadow-md)] min-w-[160px]">
+    <div className="rounded-[var(--radius-xs)] border border-[var(--border)] bg-[var(--surface-elevated)] px-3 py-2.5 shadow-[var(--shadow-md)] min-w-[160px]">
       <p className="text-[11px] text-[var(--text-muted)] mb-1.5 font-medium">
         Scan #{point.index}
       </p>
@@ -218,25 +223,47 @@ export function PerformanceChart({ history }: PerformanceChartProps) {
             <>
               <div className="h-52 md:h-60 min-h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
+                  <ComposedChart
                     data={data}
                     margin={{ top: 6, right: 8, left: 0, bottom: 0 }}
                   >
+                    <defs>
+                      <linearGradient
+                        id="latencyLineGradient"
+                        x1="0"
+                        y1="0"
+                        x2="1"
+                        y2="0"
+                      >
+                        <stop offset="0%" stopColor={COLD_COLOR} />
+                        <stop offset="100%" stopColor={CACHE_COLOR} />
+                      </linearGradient>
+                      <linearGradient
+                        id="latencyAreaGradient"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop offset="0%" stopColor={COLD_COLOR} stopOpacity={0.25} />
+                        <stop offset="100%" stopColor={COLD_COLOR} stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
                     <CartesianGrid
-                      stroke="#e2e8f0"
+                      stroke="var(--border)"
                       vertical={false}
                       strokeDasharray="3 5"
                       strokeOpacity={0.7}
                     />
                     <XAxis
                       dataKey="scanNumber"
-                      tick={{ fontSize: 12, fill: "#64748b" }}
-                      axisLine={{ stroke: "#e2e8f0" }}
+                      tick={{ fontSize: 12, fill: "var(--text-muted)" }}
+                      axisLine={{ stroke: "var(--border)" }}
                       tickLine={false}
                       interval="preserveStartEnd"
                     />
                     <YAxis
-                      tick={{ fontSize: 12, fill: "#64748b" }}
+                      tick={{ fontSize: 12, fill: "var(--text-muted)" }}
                       axisLine={false}
                       tickLine={false}
                       tickFormatter={formatYAxisTick}
@@ -247,19 +274,28 @@ export function PerformanceChart({ history }: PerformanceChartProps) {
                     />
                     <Tooltip
                       content={<LatencyTooltip />}
-                      cursor={{ stroke: "rgba(15,23,42,0.05)", strokeWidth: 1 }}
+                      cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="time"
+                      stroke="none"
+                      fill="url(#latencyAreaGradient)"
+                      isAnimationActive={true}
+                      legendType="none"
+                      activeDot={false}
                     />
                     <Line
                       type="monotone"
                       dataKey="time"
-                      stroke="#cbd5e1"
-                      strokeWidth={1.5}
+                      stroke="url(#latencyLineGradient)"
+                      strokeWidth={2}
                       dot={<CustomDot />}
                       activeDot={<CustomActiveDot />}
                       isAnimationActive={true}
                       legendType="none"
                     />
-                  </LineChart>
+                  </ComposedChart>
                 </ResponsiveContainer>
               </div>
               <ChartLegend />

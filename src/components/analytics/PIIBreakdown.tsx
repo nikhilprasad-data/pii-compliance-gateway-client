@@ -32,12 +32,12 @@ function getSeverityClasses(category: string): {
 } {
   const n = category.toUpperCase().replace(/\s+/g, "_");
   if (CRITICAL.has(n))
-    return { row: "text-red-700", dot: "bg-red-400" };
+    return { row: "text-[var(--danger-text)]", dot: "bg-[var(--danger)]" };
   if (CONTACT.has(n))
-    return { row: "text-amber-700", dot: "bg-amber-400" };
+    return { row: "text-[var(--warning-text)]", dot: "bg-[var(--warning)]" };
   if (LOCATION.has(n))
-    return { row: "text-blue-700", dot: "bg-blue-400" };
-  return { row: "text-violet-700", dot: "bg-violet-400" };
+    return { row: "text-[var(--info-text)]", dot: "bg-[var(--info)]" };
+  return { row: "text-[var(--violet-text)]", dot: "bg-[var(--violet)]" };
 }
 
 export function PIIBreakdown({ categories, totalScans }: PIIBreakdownProps) {
@@ -118,10 +118,10 @@ export function PIIBreakdown({ categories, totalScans }: PIIBreakdownProps) {
               {categories.length > 0 && (
                 <div className="flex flex-wrap gap-x-4 gap-y-1 pt-3 mt-2 border-t border-[var(--border)]">
                   {[
-                    { dot: "bg-red-400", label: "Critical / Financial" },
-                    { dot: "bg-amber-400", label: "Contact / Communication" },
-                    { dot: "bg-blue-400", label: "Location / Identity" },
-                    { dot: "bg-violet-400", label: "Personal / Other" },
+                    { dot: "bg-[var(--danger)]", label: "Critical / Financial" },
+                    { dot: "bg-[var(--warning)]", label: "Contact / Communication" },
+                    { dot: "bg-[var(--info)]", label: "Location / Identity" },
+                    { dot: "bg-[var(--violet)]", label: "Personal / Other" },
                   ].map(({ dot, label }) => (
                     <span
                       key={label}

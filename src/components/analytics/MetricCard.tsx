@@ -16,10 +16,17 @@ interface MetricCardProps {
 }
 
 const accentColors: Record<NonNullable<MetricCardProps["accent"]>, string> = {
-  blue: "bg-[var(--primary)]",
-  green: "bg-[var(--success)]",
-  amber: "bg-[var(--warning)]",
-  red: "bg-[var(--danger)]",
+  blue: "bg-gradient-to-r from-[var(--primary)] to-[var(--accent-2)]",
+  green: "bg-gradient-to-r from-[var(--success)] to-[#6ee7b7]",
+  amber: "bg-gradient-to-r from-[var(--warning)] to-[#e8c36b]",
+  red: "bg-gradient-to-r from-[var(--danger)] to-[#fca5b1]",
+};
+
+const accentGlow: Record<NonNullable<MetricCardProps["accent"]>, string> = {
+  blue: "shadow-[0_0_10px_-2px_var(--accent-glow)]",
+  green: "shadow-[0_0_10px_-2px_rgba(52,211,153,0.5)]",
+  amber: "shadow-[0_0_10px_-2px_rgba(212,169,74,0.5)]",
+  red: "shadow-[0_0_10px_-2px_rgba(251,113,133,0.5)]",
 };
 
 const accentBadgeColors: Record<NonNullable<MetricCardProps["accent"]>, string> = {
@@ -45,7 +52,7 @@ export function MetricCard({
     <Card className="h-full overflow-hidden">
       {/* Top accent bar */}
       <div
-        className={`h-0.5 w-full ${accentColors[accent]}`}
+        className={`h-0.5 w-full ${accentColors[accent]} ${accentGlow[accent]}`}
         aria-hidden="true"
       />
       <CardBody className="flex flex-col min-w-0 gap-1">
@@ -56,11 +63,10 @@ export function MetricCard({
 
         {/* Primary value */}
         <p
-          className={`text-[1.75rem] leading-none font-extrabold tracking-tight tabular-nums ${
-            isEmpty
-              ? "text-[var(--text-muted)]"
-              : (valueColor ?? "text-[var(--text-primary)]")
-          }`}
+          className={`text-[1.75rem] leading-none font-extrabold tracking-tight tabular-nums ${isEmpty
+            ? "text-[var(--text-muted)]"
+            : (valueColor ?? "text-[var(--text-primary)]")
+            }`}
         >
           {value}
         </p>

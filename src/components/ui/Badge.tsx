@@ -17,17 +17,17 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 const variantMap: Record<BadgeVariant, string> = {
   default:
-    "bg-slate-50 text-slate-600 border-slate-200",
+    "bg-[var(--surface-strong)] text-[var(--text-secondary)] border-[var(--border-strong)]",
   success:
-    "bg-emerald-50 text-emerald-700 border-emerald-200",
+    "bg-[var(--success-subtle)] text-[var(--success-text)] border-[var(--success-border)]",
   warning:
-    "bg-amber-50 text-amber-700 border-amber-200",
+    "bg-[var(--warning-subtle)] text-[var(--warning-text)] border-[var(--warning-border)]",
   error:
-    "bg-red-50 text-red-700 border-red-200",
+    "bg-[var(--danger-subtle)] text-[var(--danger-text)] border-[var(--danger-border)]",
   info:
-    "bg-blue-50 text-blue-700 border-blue-200",
+    "bg-[var(--info-subtle)] text-[var(--info-text)] border-[var(--info-border)]",
   neutral:
-    "bg-slate-50 text-slate-500 border-slate-200",
+    "bg-[var(--surface-strong)] text-[var(--text-muted)] border-[var(--border)]",
 };
 
 export function Badge({

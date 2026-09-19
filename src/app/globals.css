@@ -1,62 +1,72 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────
-   DESIGN TOKENS — Professional Light Theme
+   DESIGN TOKENS — AI-Era Hybrid Dark Theme
    ───────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --background: #f8fafc;
-  --background-subtle: #f1f5f9;
+  --background: #050505;
+  --background-subtle: #0a0a0a;
 
   /* Surfaces */
-  --surface: #ffffff;
-  --surface-elevated: #ffffff;
-  --surface-subtle: #f8fafc;
-  --surface-strong: #f1f5f9;
+  --surface: #0d0d0d;
+  --surface-elevated: #161616;
+  --surface-subtle: #121212;
+  --surface-strong: #1e1e1e;
 
   /* Borders */
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
+  --border: #232323;
+  --border-strong: #333333;
 
   /* Typography */
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-muted: #8a8a8a;
 
-  /* Brand / Primary */
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-subtle: #eff6ff;
-  --primary-border: #bfdbfe;
+  /* Brand / Primary — indigo (AI-Era accent) */
+  --primary: #7c5cfc;
+  --primary-hover: #6a4ae8;
+  --primary-subtle: rgba(124, 92, 252, 0.12);
+  --primary-border: rgba(124, 92, 252, 0.35);
+
+  /* Secondary accent — cyan (used sparingly alongside primary) */
+  --accent-2: #22d3ee;
+  --accent-glow: rgba(124, 92, 252, 0.45);
 
   /* Semantic — Success */
-  --success: #16a34a;
-  --success-subtle: #f0fdf4;
-  --success-border: #bbf7d0;
-  --success-text: #15803d;
+  --success: #34d399;
+  --success-subtle: rgba(52, 211, 153, 0.12);
+  --success-border: rgba(52, 211, 153, 0.3);
+  --success-text: #6ee7a8;
 
   /* Semantic — Warning */
-  --warning: #d97706;
-  --warning-subtle: #fffbeb;
-  --warning-border: #fde68a;
-  --warning-text: #b45309;
+  --warning: #d4a94a;
+  --warning-subtle: rgba(212, 169, 74, 0.12);
+  --warning-border: rgba(212, 169, 74, 0.3);
+  --warning-text: #e8c36b;
 
   /* Semantic — Danger */
-  --danger: #dc2626;
-  --danger-subtle: #fef2f2;
-  --danger-border: #fecaca;
-  --danger-text: #b91c1c;
+  --danger: #fb7185;
+  --danger-subtle: rgba(251, 113, 133, 0.12);
+  --danger-border: rgba(251, 113, 133, 0.3);
+  --danger-text: #fca5b1;
 
   /* Semantic — Info */
-  --info: #0284c7;
-  --info-subtle: #f0f9ff;
-  --info-border: #bae6fd;
-  --info-text: #0369a1;
+  --info: #22d3ee;
+  --info-subtle: rgba(34, 211, 238, 0.12);
+  --info-border: rgba(34, 211, 238, 0.3);
+  --info-text: #67e8f9;
 
-  /* Elevation */
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -1px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.07), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+  /* Semantic — Violet (new: "Personal / Other" PII category) */
+  --violet: #a78bfa;
+  --violet-subtle: rgba(167, 139, 250, 0.12);
+  --violet-border: rgba(167, 139, 250, 0.3);
+  --violet-text: #c4b5fd;
+
+  /* Elevation — dark-mode shadows (subtle, black-based) */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 10px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 24px -3px rgba(0, 0, 0, 0.6), 0 4px 8px -2px rgba(0, 0, 0, 0.4);
 
   /* Shape */
   --radius-md: 10px;
@@ -87,7 +97,7 @@
 }
 
 html {
-  color-scheme: light;
+  color-scheme: dark;
   scroll-behavior: smooth;
 }
 
@@ -163,19 +173,19 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-strong);
   border-radius: 99px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #4a4a4a;
 }
 
 /* ─────────────────────────────────────────
    SELECTION
    ───────────────────────────────────────── */
 ::selection {
-  background: rgba(37, 99, 235, 0.15);
+  background: rgba(124, 92, 252, 0.3);
   color: var(--text-primary);
 }
 
@@ -210,4 +220,37 @@ table {
     overflow-x: hidden;
     word-break: break-word;
   }
+}
+
+/* ─────────────────────────────────────────
+   GLOW UTILITIES — AI-Era Hybrid accents
+   (pure CSS additions, no existing rules changed)
+   ───────────────────────────────────────── */
+.glow-heading {
+  text-shadow: 0 0 28px var(--accent-glow), 0 0 64px rgba(124, 92, 252, 0.2);
+}
+
+.glow-danger {
+  text-shadow: 0 0 14px rgba(251, 113, 133, 0.45);
+}
+
+.glow-success {
+  text-shadow: 0 0 14px rgba(52, 211, 153, 0.4);
+}
+
+.glow-icon {
+  box-shadow: 0 0 16px -2px var(--accent-glow);
+}
+
+.btn-primary-glow {
+  background-image: linear-gradient(135deg, var(--primary), var(--accent-2));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+    0 8px 20px -8px var(--accent-glow);
+  transition: filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary-glow:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 12px 28px -6px var(--accent-glow);
 }

@@ -60,14 +60,14 @@ export function ScanHistory({ history }: ScanHistoryProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={closeModal}
             aria-hidden="true"
           />
 
           {/* Modal panel */}
           <div
-            className="relative w-full max-w-3xl bg-white rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] border border-[var(--border)] overflow-hidden flex flex-col max-h-[85vh]"
+            className="relative w-full max-w-3xl bg-[var(--surface)] rounded-[var(--radius-md)] shadow-[var(--shadow-lg)] border border-[var(--border)] overflow-hidden flex flex-col max-h-[85vh]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="history-modal-title"
@@ -139,22 +139,21 @@ export function ScanHistory({ history }: ScanHistoryProps) {
                           </td>
                           <td className="px-4 py-3">
                             <span
-                              className={`text-[13px] font-bold tabular-nums ${
-                                scan.piiDetected > 0
-                                  ? "text-[var(--danger-text)]"
-                                  : "text-[var(--success-text)]"
-                              }`}
+                              className={`text-[13px] font-bold tabular-nums ${scan.piiDetected > 0
+                                ? "text-[var(--danger-text)]"
+                                : "text-[var(--success-text)]"
+                                }`}
                             >
                               {scan.piiDetected}
                             </span>
                           </td>
                           <td className="px-4 py-3">
                             {scan.path === "CACHE HIT" ? (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--success-subtle)] text-[var(--success-text)] border border-[var(--success-border)]">
                                 ⚡ Cache Hit
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--warning-subtle)] text-[var(--warning-text)] border border-[var(--warning-border)]">
                                 Cold Request
                               </span>
                             )}

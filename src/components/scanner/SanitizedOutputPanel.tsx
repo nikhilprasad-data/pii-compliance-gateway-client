@@ -25,6 +25,24 @@ function ScanLoadingState() {
   return <LoadingState title={label} className="h-full py-8" />;
 }
 
+/**
+ * Renders sanitized text with [REDACTED] markers highlighted.
+ * Pure presentational split — does not alter the underlying text,
+ * only how each piece is colored when rendered.
+ */
+function renderSanitizedText(text: string) {
+  const parts = text.split(/(\[REDACTED\])/g);
+  return parts.map((part, i) =>
+    part === "[REDACTED]" ? (
+      <span key={i} className="text-[var(--danger-text)] font-semibold">
+        {part}
+      </span>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 export function SanitizedOutputPanel({
   result,
   isLoading,
@@ -80,7 +98,9 @@ export function SanitizedOutputPanel({
             <ScanLoadingState />
           ) : result ? (
             <pre className="text-[0.8125rem] text-[var(--text-secondary)] font-mono leading-relaxed whitespace-pre-wrap break-words p-3.5 h-full overflow-auto">
-              {result.sanitized_text || "(empty response)"}
+              {result.sanitized_text
+                ? renderSanitizedText(result.sanitized_text)
+                : "(empty response)"}
             </pre>
           ) : (
             /* Compact empty state */

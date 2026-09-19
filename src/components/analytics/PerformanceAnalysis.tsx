@@ -27,9 +27,8 @@ function StatRow({ label, value, valueColor, prominent }: StatRowProps) {
         {label}
       </dt>
       <dd
-        className={`flex-shrink-0 text-right tabular-nums ${
-          prominent ? "text-[15px] font-bold" : "text-[14px] font-semibold"
-        } ${valueColor ?? "text-[var(--text-primary)]"}`}
+        className={`flex-shrink-0 text-right tabular-nums ${prominent ? "text-[15px] font-bold" : "text-[14px] font-semibold"
+          } ${valueColor ?? "text-[var(--text-primary)]"}`}
       >
         {value}
       </dd>
@@ -63,7 +62,7 @@ export function PerformanceAnalysis({ cache }: PerformanceAnalysisProps) {
             Cold vs. cached request breakdown
           </p>
           {cache.speedup !== null && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--radius-xs)] text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex-shrink-0">
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-[var(--radius-xs)] text-[11px] font-bold bg-[var(--success-subtle)] text-[var(--success-text)] border border-[var(--success-border)] shadow-[0_0_8px_-2px_rgba(52,211,153,0.5)] flex-shrink-0">
               ⚡ {formatSpeedup(cache.speedup)} faster
             </span>
           )}
@@ -141,18 +140,17 @@ export function PerformanceAnalysis({ cache }: PerformanceAnalysisProps) {
                       Cache hit rate
                     </span>
                     <span
-                      className={`text-[12px] font-bold ${
-                        hitRatePct >= 50
-                          ? "text-[var(--success-text)]"
-                          : "text-[var(--text-secondary)]"
-                      }`}
+                      className={`text-[12px] font-bold ${hitRatePct >= 50
+                        ? "text-[var(--success-text)]"
+                        : "text-[var(--text-secondary)]"
+                        }`}
                     >
                       {hitRatePct}%
                     </span>
                   </div>
                   <div className="h-1 rounded-full bg-[var(--surface-strong)] overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-[var(--success)] transition-[width] duration-500"
+                      className="h-full rounded-full bg-[var(--success)] transition-[width] duration-500 shadow-[0_0_10px_-1px_rgba(52,211,153,0.7)]"
                       style={{ width: `${hitRatePct}%` }}
                       role="meter"
                       aria-valuenow={hitRatePct}
